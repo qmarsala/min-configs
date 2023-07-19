@@ -1,0 +1,142 @@
+// https://docs.microsoft.com/en-us/windows/terminal/customize-settings/startup
+{
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+  "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+  "centerOnLaunch": true,
+  "profiles": {
+    "defaults": {
+      "colorScheme": "VS Code DarkPlus",
+      "backgroundImage": "C:/QLocal/git/configs/powershell/bg/nature1.png",
+      "backgroundImageOpacity": 0.45,
+      "background": "#000",
+      "font": {
+        "face": "CaskaydiaCove NF",
+        "size": 10
+      },
+      "padding": "4",
+      "historySize": 92345
+    },
+    "list": [
+      {
+        "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+        "name": "PowerShell",
+        "source": "Windows.Terminal.PowershellCore",
+        "hidden": false,
+        "startingDirectory": "C:\\QLocal\\git"
+      },
+      {
+        "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+        "name": "Windows PowerShell",
+        "commandline": "powershell.exe",
+        "hidden": false,
+        "startingDirectory": "C:\\QLocal\\git"
+      },
+      {
+        "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+        "name": "cmd",
+        "commandline": "cmd.exe",
+        "hidden": false
+      },
+      {
+        "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+        "name": "Ubuntu",
+        "source": "Windows.Terminal.Wsl",
+        "hidden": false
+      }
+    ]
+  },
+  "schemes": [
+    {
+      "name": "VS Code DarkPlus",
+      "foreground": "#d4d4d4",
+      "background": "#1e1e1e",
+      "black": "#1e1e1e",
+      "red": "#f44747",
+      "green": "#608b4e",
+      "yellow": "#d7ba7d",
+      "blue": "#6796e6",
+      "purple": "#646695",
+      "cyan": "#569cd6",
+      "white": "#d4d4d4",
+      "brightBlack": "#808080",
+      "brightRed": "#d16969",
+      "brightGreen": "#8db07b",
+      "brightYellow": "#dcdcaa",
+      "brightBlue": "#9cdcfe",
+      "brightPurple": "#c586c0",
+      "brightCyan": "#4ec9b0",
+      "brightWhite": "#eeeeee"
+    }
+  ],
+  // To unbind a default keybinding, set the command to "unbound"
+  // defaultsFile: ctrl+alt+,
+  // prettier-ignore
+  "actions": [
+    {
+      "command": {
+        "action": "globalSummon",
+        "name": "_quake",
+        "dropdownDuration": 200,
+        "toggleVisibility": true,
+        "monitor": "toMouse",
+        "desktop": "toCurrent"
+      },
+      "keys": "win+`"
+    },
+    {
+      "command": {
+        "action": "copy",
+        "singleLine": false
+      },
+      "keys": "ctrl+c"
+    },
+    {
+      "command": "find",
+      "keys": [
+        "ctrl+f"
+      ]
+    },
+    {
+      "command": "newTab",
+      "keys": [
+        "ctrl+t"
+      ]
+    },
+    {
+      "command": {
+        "action": "moveTab",
+        "direction": "forward"
+      },
+      "keys": [
+        "ctrl+shift+pgdn"
+      ]
+    },
+    {
+      "command": {
+        "action": "moveTab",
+        "direction": "backward"
+      },
+      "keys": [
+        "ctrl+shift+pgup"
+      ]
+    },
+    {
+      "command": {
+        "action": "nextTab",
+        "tabSwitcherMode": "inOrder"
+      },
+      "keys": "ctrl+pgdn"
+    },
+    {
+      "command": {
+        "action": "prevTab",
+        "tabSwitcherMode": "inOrder"
+      },
+      "keys": "ctrl+pgup"
+    },
+    {
+      "command": "closePane",
+      "keys": "ctrl+w"
+    }
+  ]
+}

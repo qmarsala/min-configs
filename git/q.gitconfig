@@ -1,0 +1,73 @@
+[q]
+	difftool = VSCode
+[user]
+	name = Quinten Marsala
+[core]
+	editor = code --wait --new-window
+[advice]
+	skippedCherryPicks = false
+[status]
+	short = true
+	branch = true
+[safe]
+	directory = *
+[url "https://"]
+	insteadOf = git://
+[url "https://github.com/"]
+	insteadOf = git@github.com:
+[pull]
+	rebase = true
+[fetch]
+	prune = true
+[difftool]
+	prompt = false
+[mergetool]
+	keepBackup = false
+[difftool "VSCode"]
+	cmd = code --wait --diff $LOCAL $REMOTE
+[mergetool "VSCode"]
+	cmd = code --wait --merge $LOCAL $REMOTE $BASE $MERGED
+[alias]
+	set-email = !git config --local user.email $(git log -1 --author \"$(git config user.name)\" --format=%ae)
+	config-path = config --global --get include.path q.gitconfig
+	config-edit = "!git config --edit --file $(git config-path)"
+	log-graph-base = log --graph --decorate -30 --topo-order --date=format-local:'%Y-%m-%d %H:%M:%S' --pretty=format:'%C(cyan)%h%Creset %C(black bold)%ad%Creset %C(green)%<(15,trunc)%an%Creset%C(auto)%d %s'
+	lg = log-graph-base --all # log-graph
+	lgc = lg --pretty=format:'%C(cyan)%h%Creset %C(black bold)%ad%Creset %C(green)%<(15,trunc)%an%Creset%C(auto)%d %s%C(green)% (trailers:key=co-authored-by,valueonly,separator=%x2C )%Creset' # log-graph(-with)-co-authors
+	lgr = !git log-graph-base --branches --ignore-missing $(git branch --format '%(upstream:short)') # log-graph(-ignore)-remote(-only)
+	lgb = log-graph-base # log-graph(-for)-branch
+	last-message = log -1 --pretty=format:%B
+	commitwip = !git add -A && git commit -m WIP
+	continuewip = "!if [ \"$(git log -1 --pretty=format:%B)\" == \"WIP\" ]; then git reset HEAD~1; elif [ \"$1\" != \"-q\" ]; then echo 'The last commit was not \"WIP\"'; fi #"
+	d = "!git difftool -t $(git config q.difftool)"
+	da = "!f() { for filename in $(git diff --name-only $*); do git difftool -t $(git config q.difftool) $* $filename & done }; f"
+	dd = difftool --dir-diff
+	m = "!git mergetool -t $(git config q.difftool)"
+	st = "!git difftool -t $(git config q.difftool) HEAD~ HEAD"
+	sa = "!f() { for filename in $(git diff --name-only HEAD~ HEAD); do git difftool -t $(git config q.difftool) HEAD~ HEAD $filename & done }; f"
+	sd = difftool --dir-diff HEAD~ HEAD
+	s = status
+	ss = show --name-status --abbrev-commit
+	c = commit -m
+	ca = commit --amend --no-edit
+	cae = commit --amend
+	caa = commit --amend --reset-author --no-edit
+	cc = commit -c
+	co = checkout
+	cob = checkout -b
+	wippull = "!git commitwip && git pull && git continuewip"
+	pushu = "!git push -u origin $(git branch --show-current)"
+	pushnv = push --no-verify
+	pushprev = "!f() { if [ $1 ]; then ref=$1; shift; git push origin $ref:$(git branch --show-current) $@; else echo 'No commit-ish specified\nUsage: git pushprev <commit-ish> [options]'; fi }; f"
+	pr = !start $(git config remote.origin.url | sed s/\\\\.git//)/pull/new/$(git branch --show-current)
+	b = branch -a
+	forget-branch = !branch=$(git branch --show-current) && git co - && git branch -d $branch
+	unsynced = log --branches --not --remotes --no-walk --oneline
+	ri = rebase -i
+	rc = !git -c core.editor=true rebase --continue
+	ra = rebase --abort
+	wiprebase = "!f() { if [ $1 ]; then git commitwip && git rebase $1 && git continuewip; else echo 'No branch specified'; fi }; f"
+	autosquash = -c sequence.editor=true ri --autosquash
+	commit-fix = "!ref=$(git rev-parse --short \"$1\") && git commit --fixup $ref && (if [ \"$(git status --porcelain)\" != \"\" ]; then git commitwip; fi) && git autosquash $ref~ && git continuewip -q #"
+	site = !start $(git config remote.origin.url)
+	link = "!f() { if [ $1 ]; then url="$(git config remote.origin.url | sed s/\\\\.git//)/commit/$(git rev-parse --short \"$1\")"; echo \"$url\n\tadded to clipboard\"; echo $url | clip; else echo 'No commit-ish specified\nUsage: git link <commit-ish>'; fi }; f"
