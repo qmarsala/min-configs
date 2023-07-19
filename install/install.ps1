@@ -37,31 +37,7 @@ InstallFromWingetBlock Microsoft.VisualStudio.2022.Professional `
 
     $vsInstallation = . "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -format json | ConvertFrom-Json
     $vsVersion = ($vsInstallation.installationVersion).Substring(0, 2)
-
-    # Hide dynamic nodes in Solution Explorer
-    Set-RegistryValue "HKCU:\Software\Microsoft\VisualStudio\$vsVersion.0_$($vsInstallation.instanceId)" -Name UseSolutionNavigatorGraphProvider -Value 0
-
-    # Visual Studio > Help > Privacy > Privacy Settings... > Experience Improvement Program = No
-    Set-RegistryValue "HKLM:\SOFTWARE\WOW6432Node\Microsoft\VSCommon\$vsVersion.0\SQM" -Name OptIn -Value 0
 } -NoUpdate
-
-InstallFromWingetBlock 7zip.7zip {
-    Set-RegistryValue "HKCU:\SOFTWARE\7-Zip\FM" -Name ShowDots -Value 1
-    Set-RegistryValue "HKCU:\SOFTWARE\7-Zip\FM" -Name ShowRealFileIcons -Value 1
-    Set-RegistryValue "HKCU:\SOFTWARE\7-Zip\FM" -Name FullRow -Value 1
-    Set-RegistryValue "HKCU:\SOFTWARE\7-Zip\FM" -Name ShowSystemMenu -Value 1
-    . "$env:ProgramFiles\7-Zip\7zFM.exe"
-    Write-ManualStep "Tools >"
-    Write-ManualStep "`tOptions >"
-    Write-ManualStep "`t`t7-Zip >"
-    Write-ManualStep "`t`t`tContext menu items > [only the following]"
-    Write-ManualStep "`t`t`t`tOpen archive"
-    Write-ManualStep "`t`t`t`tExtract Here"
-    Write-ManualStep "`t`t`t`tExtract to <Folder>"
-    Write-ManualStep "`t`t`t`tAdd to <Archive>.zip"
-    Write-ManualStep "`t`t`t`tCRC SHA >"
-    WaitWhileProcess 7zFM
-}
 
 InstallFromWingetBlock NickeManarin.ScreenToGif {
     DeleteDesktopShortcut ScreenToGif

@@ -56,18 +56,6 @@ function FirstRunBlock([string]$Comment, [scriptblock]$ScriptBlock, [switch]$Req
     } -RequiresReboot:$RequiresReboot
 }
 
-function ConfigFollowup([string]$FileName, [scriptblock]$Followup) {
-    Set-Content "$env:tmp\$FileName.ps1" {
-        Write-Output "$FileName"
-        . $git\configs\config-functions.ps1
-        $Followup
-        Write-Output "Done. Press Enter to close."
-        Read-Host
-    }.ToString().Replace('$FileName', $FileName).Replace('$Followup', $Followup)
-    New-FileRunOnce $FileName "$env:tmp\$FileName.ps1"
-    Add-Content C:\QLocal\backup\runonce.txt ". $env:tmp\$FileName.ps1"
-}
-
 function DeleteDesktopShortcut([string]$ShortcutName) {
     if ((Get-Content C:\QLocal\.delete-desktop-shortcuts.txt -ErrorAction Ignore) -notcontains $ShortcutName) {
         Add-Content C:\QLocal\.delete-desktop-shortcuts.txt $ShortcutName
@@ -95,31 +83,6 @@ function Write-ManualStep([string]$Comment) {
     $esc = [char]27
     Write-Output "$esc[1;43;22;30;52mManual step:$esc[0;1;33m $Comment$esc[0m"
     Start-Sleep -Seconds ([Math]::Ceiling($Comment.Length / 10))
-}
-
-function ConfigureNotifications([string]$AppId) {
-    Set-RegistryValue "HKCU:\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\$AppId" ShowInActionCenter 0
-}
-
-function InstallFromGitHubBlock([string]$User, [string]$Repo, [scriptblock]$AfterClone, [int]$CloneDepth) {
-    Block "Install $User/$Repo" {
-        if (!$CloneDepth) {
-            git clone https://github.com/$User/$Repo.git $git\$Repo
-        }
-        else {
-            git clone https://github.com/$User/$Repo.git $git\$Repo --depth $CloneDepth
-        }
-        if ($AfterClone) {
-            pushd $git\$Repo
-            if ($User -eq "qmarsala") {
-                git set-email
-            }
-            Invoke-Command $AfterClone
-            popd
-        }
-    } {
-        Test-Path $git\$Repo
-    }
 }
 
 function InstallFromGitHubAssetBlock([string]$User, [string]$Repo, [string]$Asset, [scriptblock]$Install, [scriptblock]$CompleteCheck) {
